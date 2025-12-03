@@ -35,15 +35,28 @@
             </NuxtLink>
           </div>
 
-          <!-- Login Button -->
+          <!-- Auth Area -->
           <div>
-            <a 
-              href="http://localhost:3000/auth/google" 
-              class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-            >
-              <Icon name="mdi:google" class="text-xl" />
-              <span>Login com Google</span>
-            </a>
+            <template v-if="auth.user">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-slate-700 overflow-hidden border border-slate-600">
+                  <img v-if="avatarUrl" :src="avatarUrl" alt="Avatar" class="w-full h-full object-cover" />
+                </div>
+                <span class="text-sm">{{ auth.user.email }}</span>
+                <button @click="logout" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
+                  Sair
+                </button>
+              </div>
+            </template>
+            <template v-else>
+              <a 
+                href="http://localhost:3000/auth/google" 
+                class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+              >
+                <Icon name="mdi:google" class="text-xl" />
+                <span>Login com Google</span>
+              </a>
+            </template>
           </div>
         </div>
       </div>
@@ -64,5 +77,10 @@
 </template>
 
 <script setup lang="ts">
-// Layout configuration
+import { computed } from 'vue'
+import { useAuthStore } from '../stores/auth'
+
+const auth = useAuthStore()
+const avatarUrl = computed(() => null)
+const logout = () => auth.logout()
 </script>
