@@ -20,5 +20,7 @@ onMounted(() => {
     auth.setToken(token)
     router.push('/')
   }
+  // Hidrata usuário caso já exista cookie
+  auth.syncUser()
 })
 </script>

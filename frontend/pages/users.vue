@@ -32,6 +32,8 @@
 </template>
 
 <script setup lang="ts">
+declare const definePageMeta: (meta: any) => void
+definePageMeta({ middleware: ['auth'] })
 const { data, pending, error } = await useFetch('http://localhost:3000/users')
 
 const users = computed(() => data?.value ?? [])

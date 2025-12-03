@@ -64,6 +64,9 @@
 </template>
 
 <script setup lang="ts">
+// Nuxt auto-importa definePageMeta em runtime; em TS, declare global
+declare const definePageMeta: (meta: any) => void
+definePageMeta({ middleware: ['auth'] })
 import { ref, computed } from 'vue'
 import { useFetch } from 'nuxt/app'
 

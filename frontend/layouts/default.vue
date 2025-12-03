@@ -40,9 +40,9 @@
             <template v-if="auth.user">
               <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 rounded-full bg-slate-700 overflow-hidden border border-slate-600">
-                  <img v-if="avatarUrl" :src="avatarUrl" alt="Avatar" class="w-full h-full object-cover" />
+                  <img v-if="auth.user?.picture" :src="auth.user.picture" alt="Avatar" class="w-full h-full object-cover" />
                 </div>
-                <span class="text-sm">{{ auth.user.email }}</span>
+                <span class="text-sm">{{ auth.user.name || auth.user.email }}</span>
                 <button @click="logout" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
                   Sair
                 </button>
@@ -77,10 +77,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
 
 const auth = useAuthStore()
-const avatarUrl = computed(() => null)
+auth.syncUser()
 const logout = () => auth.logout()
 </script>
