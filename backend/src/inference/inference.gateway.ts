@@ -6,13 +6,14 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { InferenceService } from './inference.service';
 
 interface StreamPayload {
   ts: string;
   frameId: string;
   overlay: {
-    boxes: number[][];
-    emotions: { label: string; score: number }[];
+    boxes: Array<[number, number, number, number]>;
+    emotions: Array<{ label: string; score: number }>;
     risk: { level: 'LOW' | 'MEDIUM' | 'HIGH'; score: number };
   };
 }
@@ -22,7 +23,11 @@ export class InferenceGateway implements OnGatewayConnection, OnGatewayDisconnec
   @WebSocketServer() server: Server;
   private clientIntervals: Map<string, NodeJS.Timeout> = new Map();
 
-  private generateRandomBox(): number[] {
+  constructor(private readonly inferenceService: InferenceService) {
+    console.log('[InferenceGateway] Constructor: InferenceService injetado');
+  }
+
+  private generateRandomBox(): [number, number, number, number] {
     const x1 = Math.floor(Math.random() * 200);
     const y1 = Math.floor(Math.random() * 200);
     const x2 = x1 + 50 + Math.floor(Math.random() * 100);
@@ -43,6 +48,12 @@ export class InferenceGateway implements OnGatewayConnection, OnGatewayDisconnec
       HIGH: 0.7 + Math.random() * 0.3,
     };
 
+    const emotions = [
+      { label: 'happy', score: Math.random() },
+      { label: 'stress', score: Math.random() },
+      { label: 'neutral', score: Math.random() },
+    ];
+
     return {
       ts: new Date().toISOString(),
       frameId: `frame-${Math.random().toString(36).substr(2, 9)}`,
@@ -52,11 +63,7 @@ export class InferenceGateway implements OnGatewayConnection, OnGatewayDisconnec
           this.generateRandomBox(),
           this.generateRandomBox(),
         ],
-        emotions: [
-          { label: 'happy', score: Math.random() },
-          { label: 'stress', score: Math.random() },
-          { label: 'neutral', score: Math.random() },
-        ],
+        emotions,
         risk: {
           level: riskLevel,
           score: riskScores[riskLevel],
@@ -69,9 +76,45 @@ export class InferenceGateway implements OnGatewayConnection, OnGatewayDisconnec
     console.log(`[InferenceGateway] Cliente conectado: ${client.id}`);
 
     // Inicia streaming de 500ms em 500ms para este cliente
-    const interval = setInterval(() => {
-      const payload = this.generateStreamPayload();
-      client.emit('stream', payload);
+    const interval = setInterval(async () => {
+      try {
+        // Gera o payload de streaming
+        const payload = this.generateStreamPayload();
+
+        // EMITE para o cliente via WebSocket
+        client.emit('stream', payload);
+        console.log(`[InferenceGateway] Stream enviado para ${client.id}`);
+
+        // CRÍTICO: Persiste o evento no MongoDB via InferenceService
+        // Mapeia o payload para o formato esperado por InferenceResult
+        const mockResult = {
+          risk: {
+            level: payload.overlay.risk.level,
+            score: payload.overlay.risk.score,
+            reasons: ['operator-position', 'equipment-missing'],
+          },
+          emotions: payload.overlay.emotions,
+          ppe: [
+            { 
+              class: 'helmet', 
+              score: Math.random() * 0.5,
+              bbox: [10, 20, 50, 80]
+            },
+            { 
+              class: 'vest', 
+              score: Math.random() * 0.7,
+              bbox: [30, 100, 150, 250]
+            },
+          ],
+          latency_ms: Math.floor(Math.random() * 100),
+        };
+
+        console.log('[InferenceGateway] Chamando inferenceService.saveEvent...');
+        await this.inferenceService.saveEvent(mockResult);
+        console.log('[InferenceGateway] Evento salvo com sucesso no MongoDB');
+      } catch (error) {
+        console.error('[InferenceGateway] ERRO ao persistir evento:', error);
+      }
     }, 500);
 
     // Armazena o interval para limpeza posterior

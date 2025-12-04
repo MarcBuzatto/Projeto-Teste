@@ -71,10 +71,6 @@
           </div>
         </NuxtLink>
       </section>
-
-      <footer class="mt-16 text-center text-sm text-gray-400">
-        <p></p>
-      </footer>
     </div>
   </div>
 </template>

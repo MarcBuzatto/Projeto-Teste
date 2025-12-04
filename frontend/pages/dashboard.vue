@@ -62,10 +62,10 @@
       </div>
 
       <!-- Main Grid: Video + Logs -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[600px]">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:h-[600px]">
         <!-- Video Player Simulado -->
-        <div class="lg:col-span-2">
-          <div class="h-full border-2 border-cyan-500/70 rounded-lg overflow-hidden bg-slate-900 relative group">
+        <div class="lg:col-span-2 flex-shrink-0">
+          <div class="h-full min-h-[300px] lg:min-h-0 border-2 border-cyan-500/70 rounded-lg overflow-hidden bg-slate-900 relative group">
             <!-- Frame Container -->
             <div
               id="video-container"
@@ -123,7 +123,7 @@
         </div>
 
         <!-- Logs Laterais -->
-        <div class="h-full border-2 border-purple-500/70 rounded-lg overflow-hidden bg-slate-900 flex flex-col">
+        <div class="h-64 md:h-auto md:max-h-full lg:h-full border-2 border-purple-500/70 rounded-lg overflow-hidden bg-slate-900 flex flex-col flex-shrink-0">
           <div class="h-8 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-b border-purple-500/50 flex items-center px-3 font-mono text-xs text-purple-300">
             RISK LOG
           </div>
@@ -209,17 +209,14 @@
         </div>
       </div>
     </div>
-
-    <!-- Footer -->
-    <div class="relative border-t border-cyan-500/50 bg-slate-950/80 backdrop-blur mt-6">
-      <div class="max-w-7xl mx-auto px-4 py-3 text-center text-xs text-slate-400 font-mono">
-        © 2025 CYBER INFERENCE | Real-time Safety Monitor | Status: {{ isConnected ? 'OPERATIONAL' : 'OFFLINE' }}
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'auth'
+})
+
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { io } from 'socket.io-client'
 import MetricCard from '~/components/MetricCard.vue'
@@ -277,6 +274,11 @@ const formatBoxes = (boxes: any[], risk: any) => {
 onMounted(async () => {
   await fetchMetrics()
 
+  // Atualizar métricas a cada 5 segundos
+  const metricsInterval = setInterval(() => {
+    fetchMetrics()
+  }, 5000)
+
   const socket = io('http://localhost:3000', {
     reconnection: true,
     reconnectionDelay: 1000,
@@ -321,6 +323,7 @@ onMounted(async () => {
   })
 
   onUnmounted(() => {
+    clearInterval(metricsInterval)
     socket.disconnect()
   })
 })

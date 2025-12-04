@@ -41,6 +41,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'auth'
+})
+
 import { computed } from 'vue'
 import { useFetch } from 'nuxt/app'
 
