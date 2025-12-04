@@ -41,11 +41,23 @@
 </template>
 
 <script setup lang="ts">
-declare const definePageMeta: (meta: any) => void
-definePageMeta({ middleware: ['auth'] })
-const { data, pending, error } = await useFetch('http://localhost:3000/users')
+import { computed } from 'vue'
+import { useFetch } from 'nuxt/app'
 
-const users = computed(() => data?.value ?? [])
+type User = {
+  _id: string
+  name: string
+  email: string
+  picture?: string
+  createdAt?: string | Date
+}
+
+// declare const definePageMeta: (meta: any) => void
+// definePageMeta({ middleware: ['auth'] })
+
+const { data, pending, error } = await useFetch<User[]>('http://localhost:3000/users')
+
+const users = computed<User[]>(() => (data?.value ?? []) as User[])
 
 function formatDate(d?: string | Date) {
   try {

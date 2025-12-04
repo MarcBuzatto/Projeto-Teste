@@ -7,7 +7,7 @@
           <!-- Logo -->
           <div class="flex items-center space-x-2">
             <Icon name="mdi:rocket-launch" class="text-blue-400 text-2xl" />
-            <span class="text-xl font-bold text-white">eMiolo Test</span>
+            <span class="text-xl font-bold text-white">Test</span>
           </div>
 
           <!-- Navigation Links -->
@@ -72,7 +72,7 @@
     <!-- Footer -->
     <footer class="bg-slate-800 mt-16">
       <div class="container mx-auto px-4 py-6 text-center text-gray-400">
-        <p>&copy; 2025 eMiolo Test - Projeto de Teste Técnico</p>
+        <p>&copy; 2025 Test - Projeto de Teste Técnico</p>
       </div>
     </footer>
   </div>

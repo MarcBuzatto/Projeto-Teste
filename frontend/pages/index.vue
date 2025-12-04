@@ -4,7 +4,7 @@
       <header class="text-center mb-12">
         <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight">
           <span class="bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400">
-            eMiolo Tech Test
+            Tech Test
           </span>
         </h1>
         <p class="mt-4 text-gray-300">Nuxt 3 + Tailwind + NestJS + MongoDB</p>
