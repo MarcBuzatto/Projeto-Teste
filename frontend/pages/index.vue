@@ -1,121 +1,64 @@
 <template>
-  <div class="max-w-4xl mx-auto">
-    <!-- Hero Section -->
-    <div class="text-center mb-12">
-      <div class="mb-6">
-        <Icon name="mdi:rocket-launch" class="text-blue-400 text-6xl mx-auto" />
-      </div>
-      <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-        Bem-vindo ao eMiolo Test
-      </h1>
-      <p class="text-xl text-gray-300">
-        Projeto de teste técnico desenvolvido com NestJS, Nuxt 3 e MongoDB
-      </p>
-    </div>
+  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-gray-100">
+    <div class="max-w-6xl mx-auto px-6 py-16">
+      <header class="text-center mb-12">
+        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight">
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400">
+            eMiolo Tech Test
+          </span>
+        </h1>
+        <p class="mt-4 text-gray-300">Nuxt 3 + Tailwind + NestJS + MongoDB</p>
+      </header>
 
-    <!-- Features Grid -->
-    <div class="grid md:grid-cols-2 gap-6 mb-12">
-      <!-- Backend Feature -->
-      <div class="bg-slate-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-200">
-        <div class="flex items-center mb-4">
-          <Icon name="mdi:server" class="text-green-400 text-3xl mr-3" />
-          <h2 class="text-2xl font-semibold">Backend (NestJS)</h2>
-        </div>
-        <ul class="space-y-2 text-gray-300">
-          <li class="flex items-start">
-            <Icon name="mdi:check-circle" class="text-green-400 mr-2 mt-1" />
-            <span>Autenticação Google OAuth2</span>
-          </li>
-          <li class="flex items-start">
-            <Icon name="mdi:check-circle" class="text-green-400 mr-2 mt-1" />
-            <span>Integração com MongoDB</span>
-          </li>
-          <li class="flex items-start">
-            <Icon name="mdi:check-circle" class="text-green-400 mr-2 mt-1" />
-            <span>API REST para gerenciamento de usuários</span>
-          </li>
-          <li class="flex items-start">
-            <Icon name="mdi:check-circle" class="text-green-400 mr-2 mt-1" />
-            <span>Integração com SWAPI (Star Wars API)</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Frontend Feature -->
-      <div class="bg-slate-800 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow duration-200">
-        <div class="flex items-center mb-4">
-          <Icon name="mdi:application" class="text-blue-400 text-3xl mr-3" />
-          <h2 class="text-2xl font-semibold">Frontend (Nuxt 3)</h2>
-        </div>
-        <ul class="space-y-2 text-gray-300">
-          <li class="flex items-start">
-            <Icon name="mdi:check-circle" class="text-blue-400 mr-2 mt-1" />
-            <span>Interface moderna com Tailwind CSS</span>
-          </li>
-          <li class="flex items-start">
-            <Icon name="mdi:check-circle" class="text-blue-400 mr-2 mt-1" />
-            <span>Gerenciamento de estado com Pinia</span>
-          </li>
-          <li class="flex items-start">
-            <Icon name="mdi:check-circle" class="text-blue-400 mr-2 mt-1" />
-            <span>Tema escuro responsivo</span>
-          </li>
-          <li class="flex items-start">
-            <Icon name="mdi:check-circle" class="text-blue-400 mr-2 mt-1" />
-            <span>Navegação fluida entre páginas</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Tech Stack -->
-    <div class="bg-slate-800 rounded-lg p-8 shadow-lg">
-      <h2 class="text-3xl font-bold mb-6 text-center">Stack Tecnológica</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div class="text-center">
-          <Icon name="mdi:nodejs" class="text-green-500 text-5xl mx-auto mb-2" />
-          <p class="font-semibold">NestJS</p>
-        </div>
-        <div class="text-center">
-          <Icon name="mdi:vuejs" class="text-green-400 text-5xl mx-auto mb-2" />
-          <p class="font-semibold">Nuxt 3</p>
-        </div>
-        <div class="text-center">
-          <Icon name="mdi:database" class="text-green-600 text-5xl mx-auto mb-2" />
-          <p class="font-semibold">MongoDB</p>
-        </div>
-        <div class="text-center">
-          <Icon name="mdi:docker" class="text-blue-500 text-5xl mx-auto mb-2" />
-          <p class="font-semibold">Docker</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- CTA Section -->
-    <div class="mt-12 text-center">
-      <p class="text-lg text-gray-300 mb-6">
-        Explore as funcionalidades navegando pelo menu acima
-      </p>
-      <div class="flex justify-center gap-4">
-        <NuxtLink 
-          to="/users" 
-          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 inline-flex items-center"
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <NuxtLink
+          to="/users"
+          class="group relative overflow-hidden rounded-2xl border border-purple-700 bg-gray-900/50 p-8 shadow-lg hover:shadow-purple-800/30 transition-all"
         >
-          <Icon name="mdi:account-group" class="mr-2 text-xl" />
-          Ver Usuários
+          <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,#a855f7_0,transparent_40%),radial-gradient(circle_at_80%_80%,#06b6d4_0,transparent_40%)]"></div>
+          <div class="relative z-10">
+            <div class="flex items-center gap-4 mb-4">
+              <span class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-purple-700/30 text-purple-300 border border-purple-500/30">
+                <!-- Ícone simplificado para evitar erros de parsing -->
+                <span class="w-7 h-7 rounded bg-purple-600/40 border border-purple-500/40"></span>
+              </span>
+              <h2 class="text-2xl font-bold">Lista de Usuários</h2>
+            </div>
+            <p class="text-gray-300">Gerencie e visualize usuários cadastrados.</p>
+            <div class="mt-6">
+              <span class="inline-block px-5 py-3 rounded-xl bg-purple-600 text-white font-semibold group-hover:bg-purple-500 transition-colors">Ir para Usuários →</span>
+            </div>
+          </div>
         </NuxtLink>
-        <NuxtLink 
-          to="/starwars" 
-          class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 inline-flex items-center"
+
+        <NuxtLink
+          to="/starwars"
+          class="group relative overflow-hidden rounded-2xl border border-cyan-700 bg-gray-900/50 p-8 shadow-lg hover:shadow-cyan-800/30 transition-all"
         >
-          <Icon name="mdi:space-invaders" class="mr-2 text-xl" />
-          Explorar Star Wars
+          <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_30%_70%,#22d3ee_0,transparent_40%),radial-gradient(circle_at_70%_30%,#64748b_0,transparent_40%)]"></div>
+          <div class="relative z-10">
+            <div class="flex items-center gap-4 mb-4">
+              <span class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-cyan-700/30 text-cyan-300 border border-cyan-500/30">
+                <!-- Ícone simplificado para evitar erros de parsing -->
+                <span class="w-7 h-7 rounded bg-cyan-600/40 border border-cyan-500/40"></span>
+              </span>
+              <h2 class="text-2xl font-bold">Star Wars API</h2>
+            </div>
+            <p class="text-gray-300">Explore dados dos personagens e planetas.</p>
+            <div class="mt-6">
+              <span class="inline-block px-5 py-3 rounded-xl bg-cyan-600 text-white font-semibold group-hover:bg-cyan-500 transition-colors">Explorar Star Wars →</span>
+            </div>
+          </div>
         </NuxtLink>
-      </div>
+      </section>
+
+      <footer class="mt-16 text-center text-sm text-gray-400">
+        <p></p>
+      </footer>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// Home page
+// Página inicial estilizada com tema dark/cyberpunk
 </script>

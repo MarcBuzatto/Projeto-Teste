@@ -9,6 +9,10 @@ export default defineNuxtConfig({
     '@nuxt/icon'
   ],
 
+  imports: {
+    dirs: ['stores']
+  },
+
   devServer: {
     port: 3001
   }

@@ -35,35 +35,37 @@
             </NuxtLink>
           </div>
 
-          <!-- Auth Area -->
-          <div>
-            <template v-if="auth.user">
-              <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-full bg-slate-700 overflow-hidden border border-slate-600">
-                  <img v-if="auth.user?.picture" :src="auth.user.picture" alt="Avatar" class="w-full h-full object-cover" />
+          <!-- Auth Area (Client-only to avoid SSR hydration mismatch) -->
+          <ClientOnly>
+            <div>
+              <template v-if="auth.user">
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 rounded-full bg-slate-700 overflow-hidden border border-slate-600">
+                    <img v-if="auth.user?.picture" :src="auth.user.picture" alt="Avatar" class="w-full h-full object-cover" />
+                  </div>
+                  <span class="text-sm">{{ auth.user.name || auth.user.email }}</span>
+                  <button @click="logout" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
+                    Sair
+                  </button>
                 </div>
-                <span class="text-sm">{{ auth.user.name || auth.user.email }}</span>
-                <button @click="logout" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
-                  Sair
-                </button>
-              </div>
-            </template>
-            <template v-else>
-              <a 
-                href="http://localhost:3000/auth/google" 
-                class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-              >
-                <Icon name="mdi:google" class="text-xl" />
-                <span>Login com Google</span>
-              </a>
-            </template>
-          </div>
+              </template>
+              <template v-else>
+                <a 
+                  href="http://localhost:3000/auth/google" 
+                  class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                >
+                  <Icon name="mdi:google" class="text-xl" />
+                  <span>Login com Google</span>
+                </a>
+              </template>
+            </div>
+          </ClientOnly>
         </div>
       </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="pt-20 container mx-auto px-4 py-8">
+    <main class="pt-20">
       <slot />
     </main>
 
