@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { SwapiModule } from './swapi/swapi.module';
+import { InferenceModule } from './inference/inference.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { SwapiModule } from './swapi/swapi.module';
     UsersModule,
     AuthModule,
     SwapiModule,
+    InferenceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
