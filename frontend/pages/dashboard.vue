@@ -4,11 +4,10 @@
     <div class="fixed inset-0 opacity-10 pointer-events-none">
       <div
         class="absolute inset-0"
-        style="
-          backgroundImage: linear-gradient(0deg, transparent 24%, rgba(0, 255, 255, 0.1) 25%, rgba(0, 255, 255, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.1) 75%, rgba(0, 255, 255, 0.1) 76%, transparent 77%, transparent),
-          linear-gradient(90deg, transparent 24%, rgba(0, 255, 255, 0.1) 25%, rgba(0, 255, 255, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.1) 75%, rgba(0, 255, 255, 0.1) 76%, transparent 77%, transparent);
-          backgroundSize: 50px 50px;
-        "
+        :style="{
+          backgroundImage: 'linear-gradient(0deg, transparent 24%, rgba(0, 255, 255, 0.1) 25%, rgba(0, 255, 255, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.1) 75%, rgba(0, 255, 255, 0.1) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 255, 255, 0.1) 25%, rgba(0, 255, 255, 0.1) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.1) 75%, rgba(0, 255, 255, 0.1) 76%, transparent 77%, transparent)',
+          backgroundSize: '50px 50px'
+        }"
       />
     </div>
 
@@ -221,12 +220,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, defineComponent } from 'vue'
 import { io, Socket } from 'socket.io-client'
 
 // Components
-const MetricCard = defineAsyncComponent(() => Promise.resolve({
-  props: ['title', 'value', 'label', 'color'],
+const MetricCard = defineComponent({
+  props: {
+    title: { type: String, required: true },
+    value: { type: [String, Number], required: true },
+    label: { type: String, required: true },
+    color: { type: String, required: true }
+  },
   setup(props) {
     const colorMap: Record<string, Record<string, string>> = {
       blue: { border: 'border-blue-500/70', bg: 'bg-blue-500/10', text: 'text-blue-400' },
@@ -247,7 +251,7 @@ const MetricCard = defineAsyncComponent(() => Promise.resolve({
       </div>
     </div>
   `
-}))
+})
 
 // State
 const isConnected = ref(false)
