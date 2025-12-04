@@ -10,7 +10,7 @@
         <p class="mt-4 text-gray-300">Nuxt 3 + Tailwind + NestJS + MongoDB</p>
       </header>
 
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <NuxtLink
           to="/users"
           class="group relative overflow-hidden rounded-2xl border border-purple-700 bg-gray-900/50 p-8 shadow-lg hover:shadow-purple-800/30 transition-all"
@@ -47,6 +47,26 @@
             <p class="text-gray-300">Explore dados dos personagens e planetas.</p>
             <div class="mt-6">
               <span class="inline-block px-5 py-3 rounded-xl bg-cyan-600 text-white font-semibold group-hover:bg-cyan-500 transition-colors">Explorar Star Wars →</span>
+            </div>
+          </div>
+        </NuxtLink>
+
+        <NuxtLink
+          to="/dashboard"
+          class="group relative overflow-hidden rounded-2xl border border-red-700 bg-gray-900/50 p-8 shadow-lg hover:shadow-red-800/30 transition-all"
+        >
+          <div class="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_40%_40%,#ef4444_0,transparent_40%),radial-gradient(circle_at_60%_60%,#f97316_0,transparent_40%)]"></div>
+          <div class="relative z-10">
+            <div class="flex items-center gap-4 mb-4">
+              <span class="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-red-700/30 text-red-300 border border-red-500/30">
+                <!-- Ícone simplificado para evitar erros de parsing -->
+                <span class="w-7 h-7 rounded bg-red-600/40 border border-red-500/40"></span>
+              </span>
+              <h2 class="text-2xl font-bold">Cyber Dashboard</h2>
+            </div>
+            <p class="text-gray-300">Monitor em tempo real de análises de segurança.</p>
+            <div class="mt-6">
+              <span class="inline-block px-5 py-3 rounded-xl bg-red-600 text-white font-semibold group-hover:bg-red-500 transition-colors">Acessar Dashboard →</span>
             </div>
           </div>
         </NuxtLink>
