@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Get } from '@nestjs/common';
 import { InferenceService } from './inference.service';
 import { InferenceResult } from './interfaces/inference-result.interface';
 
@@ -13,4 +13,10 @@ export class InferenceController {
     const frame = body?.frame ?? body;
     return this.inferenceService.analyzeFrame(frame);
   }
+
+  @Get('metrics')
+  async getDashboardMetrics() {
+    return this.inferenceService.getDashboardMetrics();
+  }
 }
+
