@@ -20,7 +20,7 @@
         </div>
         <h1 class="text-2xl font-bold text-cyan-400 font-mono">CYBER INFERENCE DASHBOARD</h1>
         <div class="text-xs text-slate-400 font-mono">
-          {{ new Date().toLocaleTimeString('pt-BR') }}
+          LIVE
         </div>
       </div>
     </div>
@@ -37,25 +37,25 @@
         />
         <MetricCard
           title="HIGH RISK"
-          :value="metrics.riskDistribution?.find((r: any) => r.level === 'HIGH')?.count || 0"
+          :value="highRiskCount"
           label="Detections"
           color="red"
         />
         <MetricCard
           title="MEDIUM RISK"
-          :value="metrics.riskDistribution?.find((r: any) => r.level === 'MEDIUM')?.count || 0"
+          :value="mediumRiskCount"
           label="Detections"
           color="yellow"
         />
         <MetricCard
           title="LOW RISK"
-          :value="metrics.riskDistribution?.find((r: any) => r.level === 'LOW')?.count || 0"
+          :value="lowRiskCount"
           label="Detections"
           color="green"
         />
         <MetricCard
           title="AVG HIGH DELAY"
-          :value="`${Math.round(metrics.avgTimeBetweenHighRiskMs / 1000)}s`"
+          :value="`${Math.round((metrics.avgTimeBetweenHighRiskMs || 0) / 1000)}s`"
           label="Response Time"
           color="purple"
         />
@@ -110,14 +110,14 @@
 
               <!-- Frame Info Overlay -->
               <div class="absolute bottom-2 right-2 text-xs font-mono text-slate-400 bg-slate-900/80 px-2 py-1 rounded border border-slate-700">
-                Frame: {{ streamData.frameId || 'N/A' }} | Latência: {{ streamData.latency }}ms
+                Frame: {{ frameId }} | Latência: {{ latency }}ms
               </div>
             </div>
 
             <!-- Header -->
             <div class="absolute top-0 left-0 right-0 h-8 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-b border-cyan-500/50 flex items-center px-3 font-mono text-xs text-cyan-300">
               VIDEO STREAM
-              <span class="ml-auto">{{ streamData.ts ? new Date(streamData.ts).toLocaleTimeString('pt-BR') : 'N/A' }}</span>
+              <span class="ml-auto">{{ frameTime }}</span>
             </div>
           </div>
         </div>
@@ -165,7 +165,7 @@
           </div>
           <div class="p-4 space-y-2 max-h-40 overflow-y-auto scrollbar-hide">
             <div
-              v-for="ppe in metrics.ppeDistribution"
+              v-for="ppe in (metrics.ppeDistribution || [])"
               :key="ppe.class"
               class="flex items-center justify-between text-xs font-mono"
             >
@@ -190,7 +190,7 @@
           </div>
           <div class="p-4 space-y-2 max-h-40 overflow-y-auto scrollbar-hide">
             <div
-              v-for="emotion in metrics.emotionDistribution"
+              v-for="emotion in (metrics.emotionDistribution || [])"
               :key="emotion.emotion"
               class="flex items-center justify-between text-xs font-mono"
             >
@@ -220,50 +220,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, defineComponent } from 'vue'
-import { io, Socket } from 'socket.io-client'
-
-// Components
-const MetricCard = defineComponent({
-  props: {
-    title: { type: String, required: true },
-    value: { type: [String, Number], required: true },
-    label: { type: String, required: true },
-    color: { type: String, required: true }
-  },
-  setup(props) {
-    const colorMap: Record<string, Record<string, string>> = {
-      blue: { border: 'border-blue-500/70', bg: 'bg-blue-500/10', text: 'text-blue-400' },
-      red: { border: 'border-red-500/70', bg: 'bg-red-500/10', text: 'text-red-400' },
-      yellow: { border: 'border-yellow-500/70', bg: 'bg-yellow-500/10', text: 'text-yellow-400' },
-      green: { border: 'border-green-500/70', bg: 'bg-green-500/10', text: 'text-green-400' },
-      purple: { border: 'border-purple-500/70', bg: 'bg-purple-500/10', text: 'text-purple-400' },
-    }
-    const colors = colorMap[props.color] || colorMap.blue
-    return { colors }
-  },
-  template: `
-    <div :class="['border-2 rounded-lg overflow-hidden bg-slate-900', colors.border]">
-      <div :class="['h-8 border-b flex items-center px-3 font-mono text-xs', colors.text, colors.bg]">{{ title }}</div>
-      <div class="p-4 text-center">
-        <div :class="['text-2xl font-bold font-mono', colors.text]">{{ value }}</div>
-        <div class="text-xs text-slate-400 mt-1">{{ label }}</div>
-      </div>
-    </div>
-  `
-})
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { io } from 'socket.io-client'
+import MetricCard from '~/components/MetricCard.vue'
 
 // State
 const isConnected = ref(false)
-const socket = ref<Socket | null>(null)
-const streamData = ref({
-  ts: null as any,
-  frameId: null as any,
-  latency: 0,
-  overlay: { boxes: [], emotions: [], risk: null }
-})
 const currentBoxes = ref<any[]>([])
 const riskLogs = ref<any[]>([])
+const frameId = ref('N/A')
+const latency = ref(0)
+const frameTime = ref('N/A')
 const metrics = ref({
   totalEvents: 0,
   riskDistribution: [] as any[],
@@ -271,6 +238,11 @@ const metrics = ref({
   emotionDistribution: [] as any[],
   avgTimeBetweenHighRiskMs: 0,
 })
+
+// Computed
+const highRiskCount = computed(() => metrics.value.riskDistribution?.find((r: any) => r.level === 'HIGH')?.count || 0)
+const mediumRiskCount = computed(() => metrics.value.riskDistribution?.find((r: any) => r.level === 'MEDIUM')?.count || 0)
+const lowRiskCount = computed(() => metrics.value.riskDistribution?.find((r: any) => r.level === 'LOW')?.count || 0)
 
 // Fetch metrics on mount
 const fetchMetrics = async () => {
@@ -305,58 +277,52 @@ const formatBoxes = (boxes: any[], risk: any) => {
 onMounted(async () => {
   await fetchMetrics()
 
-  socket.value = io('http://localhost:3000', {
+  const socket = io('http://localhost:3000', {
     reconnection: true,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
     reconnectionAttempts: 5,
   })
 
-  socket.value.on('connect', () => {
+  socket.on('connect', () => {
     isConnected.value = true
-    console.log('Connected to WebSocket')
   })
 
-  socket.value.on('disconnect', () => {
+  socket.on('disconnect', () => {
     isConnected.value = false
-    console.log('Disconnected from WebSocket')
   })
 
-  socket.value.on('stream', (payload: any) => {
-    streamData.value = payload
-    
-    // Update boxes
+  socket.on('stream', (payload: any) => {
     if (payload.overlay?.boxes) {
       currentBoxes.value = formatBoxes(payload.overlay.boxes, payload.overlay.risk)
     }
 
-    // Add to logs if HIGH risk
     if (payload.overlay?.risk?.level === 'HIGH') {
-      const time = new Date().toLocaleTimeString('pt-BR')
+      const now = new Date()
       riskLogs.value.unshift({
         level: 'HIGH',
-        time,
+        time: now.toLocaleTimeString('pt-BR'),
         score: payload.overlay.risk.score || 0.85,
       })
-      // Keep only last 20 logs
       if (riskLogs.value.length > 20) {
         riskLogs.value.pop()
       }
     }
 
-    // Simulate latency
-    streamData.value.latency = Math.round(Math.random() * 50 + 20)
+    frameId.value = payload.frameId || 'N/A'
+    latency.value = Math.round(Math.random() * 50 + 20)
+    if (payload.ts) {
+      frameTime.value = new Date(payload.ts).toLocaleTimeString('pt-BR')
+    }
   })
 
-  socket.value.on('error', (error: any) => {
+  socket.on('error', (error: any) => {
     console.error('WebSocket error:', error)
   })
-})
 
-onUnmounted(() => {
-  if (socket.value) {
-    socket.value.disconnect()
-  }
+  onUnmounted(() => {
+    socket.disconnect()
+  })
 })
 </script>
 
